@@ -8,8 +8,9 @@ class Action:
     def __init__(self, name, price, percentage_gain):
         """initialisation de l'action avec son nom, son prix et son pourcentage de benefice"""
         self.name = name
-        self.price = int(price)
-        self.percentage_gain = int(percentage_gain)
+        self.price = float(price)
+        self.percentage_gain = float(percentage_gain)
+        self.rent = self.getBenefit()
 
     def getBenefit(self):
         """retourne le benefice de l'action sur 2 ans"""
@@ -21,7 +22,7 @@ def getTableActions(fichier_csv):
     """ renvoi le tableau des objets Action créés à partir des information du fichier passé en paramètre"""
     actions_table = []
     with open(fichier_csv, newline='') as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=';')
+        reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
             action_to_add = Action(row['Action'], row['Price'], row['Benefits'][:-1])
             actions_table.append(action_to_add)
@@ -32,7 +33,7 @@ def bruteForce(action_quantity, actions_table, start_budget):
     budget = start_budget
     rent = 0
     highest_rent = 0
-    string_actions = ""
+    list_actions = []
     list_actions_to_return = []
 
     # dimension de la table actions
@@ -43,17 +44,17 @@ def bruteForce(action_quantity, actions_table, start_budget):
 
     # calcule la rentabilité de la combinaison d'action
     for index in indices:
-        string_actions += actions_table[index].name
+        list_actions.append(actions_table[index])
         budget -= actions_table[index].price
         rent += actions_table[index].getBenefit()
 
     # verifie si la combinaison est dans le budget et l'enregistre si elle produit le meilleur rendement
     if budget >= 0 and rent > highest_rent:
         highest_rent = rent
-        list_actions_to_return = [string_actions[:-2], rent]
+        list_actions_to_return = [list_actions, rent, start_budget - budget]
 
     # remise a zéro des variable de comparaison
-    string_actions = ""
+    list_actions = []
     budget = start_budget
     rent = 0
 
@@ -82,17 +83,17 @@ def bruteForce(action_quantity, actions_table, start_budget):
 
         # calcule la rentabilité de la combinaison
         for index in indices:
-            string_actions += actions_table[index].name + ", "
+            list_actions.append(actions_table[index])
             budget -= actions_table[index].price
             rent += actions_table[index].getBenefit()
 
         # verifie si la combinaison est dans le budget et l'enregistre si elle produit le meilleur rendement
         if budget >= 0 and rent > highest_rent:
             highest_rent = rent
-            list_actions_to_return = [string_actions[:-2], rent]
+            list_actions_to_return = [list_actions, rent, start_budget - budget]
 
         # remise a zéro des variable de comparaison
-        string_actions = ""
+        list_actions = []
         budget = start_budget
         rent = 0
 
@@ -100,9 +101,8 @@ def bruteForce(action_quantity, actions_table, start_budget):
 
 
 time_start = datetime.now()
-print(datetime.now())
 
-best_result = ["", 0]
+best_result = [[], 0, 0]
 my_actions_table = getTableActions('./actions.csv')
 
 for quantity_actions in range(1, len(my_actions_table) + 1):
@@ -112,9 +112,15 @@ for quantity_actions in range(1, len(my_actions_table) + 1):
         if result_tab[1] > best_result[1]:
             best_result = result_tab
 
-print(best_result)
+"""
+print report 
+"""
+print(f"Montant total investit : {best_result[2]} €")
+print(f"Rendement sur 2 Ans : {best_result[1]} €")
+for action in best_result[0]:
+    print(f"| {action.name} | prix : {action.price} € | Rendement : {action.rent} €")
+
 time_end = datetime.now()
-print(datetime.now())
 print(f"temps d'execution : {time_end - time_start}")
 
 """
