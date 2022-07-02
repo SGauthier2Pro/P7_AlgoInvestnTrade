@@ -8,7 +8,7 @@ def get_action_tables(fichier_csv):
     action_prices = []
     action_benefits = []
     with open(fichier_csv, newline='') as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=';')
+        reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
             action_names.append(row['Action'])
             action_prices.append(float(row['Price']))
@@ -17,25 +17,38 @@ def get_action_tables(fichier_csv):
         return action_names, action_prices, action_benefits
 
 
-def optimized(budget, action_prices, action_benefits, action_names, number_action, string_actions=""):
-    string_actions = string_actions
+def optimized(budget, action_prices, action_benefits, action_names, number_action, string_actions):
+    my_string_actions = string_actions
 
     if number_action == 0 or budget == 0:
-        return 0
+        return [0, ""]
 
     if action_prices[number_action - 1] > budget:
-        string_actions += action_names[number_action-1] + ", "
-        return optimized(budget, action_prices, action_benefits, action_names, number_action - 1, string_actions)
+
+        return [optimized(budget,
+                          action_prices,
+                          action_benefits,
+                          action_names,
+                          number_action - 1,
+                          my_string_actions)[0],
+                my_string_actions]
     else:
-        string_actions += action_names[number_action - 1] + ", "
-        return max(action_benefits[number_action - 1] + optimized(budget - action_prices[number_action - 1],
-                                                                  action_prices,
-                                                                  action_benefits,
-                                                                  action_names,
-                                                                  number_action - 1,
-                                                                  string_actions),
-                   optimized(budget, tab_prices, tab_benefits, action_names, number_action - 1, string_actions)
-                   )
+
+        return [max(action_benefits[number_action - 1] + optimized(budget - action_prices[number_action - 1],
+                                                                   action_prices,
+                                                                   action_benefits,
+                                                                   action_names,
+                                                                   number_action - 1,
+                                                                   (my_string_actions +
+                                                                    f", {action_names[number_action - 1]}"))[0]
+                    , optimized(budget,
+                                tab_prices,
+                                tab_benefits,
+                                action_names,
+                                number_action - 1,
+                                my_string_actions)[0]
+                    )
+                , my_string_actions]
 
 
 time_start = datetime.now()
@@ -47,9 +60,7 @@ tab_names = get_action_tables(name_file)[0]
 tab_prices = get_action_tables(name_file)[1]
 tab_benefits = get_action_tables(name_file)[2]
 
-print(len(tab_names))
-
-print(optimized(500, tab_prices, tab_benefits, tab_names, len(tab_names)))
+print(optimized(500, tab_prices, tab_benefits, tab_names, len(tab_names), ""))
 
 time_end = datetime.now()
 print(datetime.now())
