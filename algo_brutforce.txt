@@ -1,0 +1,136 @@
+Algorithme
+Début
+Fin
+
+=======================================================================
+
+Algorithme Action(nom_action, prix_action, pourcentage_benefices_action)
+Variable
+    nom <- nom_action : CHAINE DE CARACTERES
+    prix <- prix_action : ENTIER
+    pourcentage_benefices <- pourcentage_benefices_action : ENTIER
+Début
+    Fonction retourneBenefices()
+    Début Fonction
+        benefices <- prix_action * pourcentage_benefices / 100
+        retourne benefices
+    Fin Fonction
+Fin
+
+=======================================================================
+
+Algorithme chargeTableauActions(fichier_csv)
+Variable
+	tableau_actions[] : TABLEAU ACTIONS
+	tableau_ligne[] : TABLEAU
+	index_action <- 0 : ENTIER
+	ligne_fichier_csv <- "" : CHAINE DE CARACTERES
+	numero_ligne <- 0 : ENTIER
+Début
+	ligne_fichier_csv <- lecture fichier_csv
+	
+	Tant que ligne_fichier_csv != "" :
+		
+		Si numero_ligne == 0:
+			ne rien faire
+		Sinon:
+			tableau_ligne <- decoupe(ligne_fichier_csv, ";")
+			tableau_actions[index_action]<- Action(tableau_ligne[0], tableau_ligne[1], tableau_ligne[2])
+		Fin Si
+		
+		index_action <- index_action + 1
+		numero_ligne <- numero_ligne + 1
+		
+	Fin Tant que
+Fin
+
+=======================================================================
+
+Algorithme bruteforce(quantité_action, tableau_actions, budget_depart)
+Variable
+	budget <- budget_depart : ENTIER
+	gain_total <- 0.00 : FLOTTANTE
+	meilleur_gain <- 0.00 : FLOTTANTE
+	liste_actions[] : TABLEAU ACTION
+	liste_action_a_retourner[] : TABLEAU ACTION
+Début
+
+    taille_tableau <- tableau_actions.taille
+
+    tableau_indices[] <- liste indices entre 0 et quantité_action
+
+	Pour index allant de 0 jusqu'a tableau_indice.taille - 1:
+	    liste_action += tableau_action[index]
+	    budget -= tableau_action[index].prix
+	    rendement += tableau_action[index].retourneBenefices()
+	Fin de Pour
+
+	Si budget >= 0 et rendement > meilleur_gain :
+	    meilleur_gain <- rendement
+	    liste_action_a_retourner <- liste_action
+	Fin de Si
+
+	liste_actions[]
+	budget <- budget_depart
+	rendement <- 0
+
+	Si quantité_action == taille_tableau:
+	    retourner liste_action_a_retourner
+	Fin de Si
+
+	dernier_indice = quantité_action - 1
+
+	Tant que dernier_indice != -1:
+	    tableau_indices[dernier_indice] ++
+
+	    Pour indice_suivant allant de dernier_indice + 1 jusqu'a quantité_action :
+	        tableau_indices[indice_suivant] = tableau_indices[indice_suivant - 1] + 1
+	    Fin Pour
+
+	    Si tableau_indices[dernier_indice] == (taille_tableau - quantité_action + dernier_indice):
+	        dernier_indice = dernier_indice - 1
+	    Sinon:
+	        dernier_indice = quantité_action - 1
+	    Fin de Si
+
+	    Pour index allant de 0 jusqu'a tableau_indice.taille - 1:
+            liste_action += tableau_action[index]
+            budget -= tableau_action[index].prix
+            rendement += tableau_action[index].retourneBenefices()
+	    Fin de Pour
+
+        Si budget >= 0 et rendement > meilleur_gain :
+            meilleur_gain <- rendement
+            liste_action_a_retourner <- liste_action
+	    Fin de Si
+
+        liste_actions[]
+        budget <- budget_depart
+        rendement <- 0
+
+    retourner liste_action_a_retourner
+
+Fin
+
+=======================================================================
+
+Algorithme Main()
+Variables
+    meilleur_resultat <- [[], 0, 0] : TABLEAU
+    resultat [] : TABLEAU
+    mon_budget <- 500
+    Mon_tableau_actions <- chargeTableauActions(chemin_fichier_csv)
+Début
+    Pour quantité_action allant de 1 jusqu'a mon_tableau_action.taille + 1:
+        resultat <- bruteForce(quantité_action, mon_tableau_action, mon_budget)
+
+        Si resultat != null:
+            Si resultat[1] > meilleur_resultat[1]:
+                meilleur_resultat <- resultat
+            Fin de Si
+        Fin de Si
+
+    Fin de Pour
+Fin
+
+=======================================================================

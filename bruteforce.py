@@ -24,7 +24,7 @@ def getTableActions(fichier_csv):
     with open(fichier_csv, newline='') as csvfile:
         reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
-            action_to_add = Action(row['Action'], row['Price'], row['Benefits'][:-1])
+            action_to_add = Action(row['Action'], row['Price'], row['Benefits'])
             actions_table.append(action_to_add)
         return actions_table
 
@@ -133,15 +133,25 @@ print(f"temps d'execution : {time_end - time_start}")
                             20!
                           _______
                           3!(20-3)!
-    compléxité spatial:
+    compléxité spatial maximale :
     O(3n) tableau actions, tableau indices, tableau resultat
+    O(60)
     
     
     resultat :
-    2022-06-28 12:52:12.550869
-    ['Action-4, Action-5, Action-6, Action-8, Action-10, Action-11, Action-13, Action-18, Action-19, Action-20', 99.08000000000001]
-    2022-06-28 12:52:16.897011
-    temp d'execution : 0:00:04.346142
+    Montant total investit : 498.0 €
+    Rendement sur 2 Ans : 99.08000000000001 €
+    | Action-4 | prix : 70.0 € | Rendement : 14.0 €
+    | Action-5 | prix : 60.0 € | Rendement : 10.2 €
+    | Action-6 | prix : 80.0 € | Rendement : 20.0 €
+    | Action-8 | prix : 26.0 € | Rendement : 2.86 €
+    | Action-10 | prix : 34.0 € | Rendement : 9.18 €
+    | Action-11 | prix : 42.0 € | Rendement : 7.14 €
+    | Action-13 | prix : 38.0 € | Rendement : 8.74 €
+    | Action-18 | prix : 10.0 € | Rendement : 1.4 €
+    | Action-19 | prix : 24.0 € | Rendement : 5.04 €
+    | Action-20 | prix : 114.0 € | Rendement : 20.52 €
+    temps d'execution : 0:00:03.274505
 
 """
 
