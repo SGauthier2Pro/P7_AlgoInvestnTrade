@@ -123,37 +123,6 @@ for action in best_result[0]:
 time_end = datetime.now()
 print(f"temps d'execution : {time_end - time_start}")
 
-"""
-    compléxité temporelle :
-     
-    O(1048575) 
-     C : nombre de combinaison possible = nombre d'arrangement / nombre de permutation possible de chaque arrangement
-     C(1 20) + C(2 20) + C(3 20) + ... + C(20 20)
-                            |
-                            20!
-                          _______
-                          3!(20-3)!
-    compléxité spatial maximale :
-    O(3n) tableau actions, tableau indices, tableau resultat
-    O(60)
-    
-    
-    resultat :
-    Montant total investit : 498.0 €
-    Rendement sur 2 Ans : 99.08000000000001 €
-    | Action-4 | prix : 70.0 € | Rendement : 14.0 €
-    | Action-5 | prix : 60.0 € | Rendement : 10.2 €
-    | Action-6 | prix : 80.0 € | Rendement : 20.0 €
-    | Action-8 | prix : 26.0 € | Rendement : 2.86 €
-    | Action-10 | prix : 34.0 € | Rendement : 9.18 €
-    | Action-11 | prix : 42.0 € | Rendement : 7.14 €
-    | Action-13 | prix : 38.0 € | Rendement : 8.74 €
-    | Action-18 | prix : 10.0 € | Rendement : 1.4 €
-    | Action-19 | prix : 24.0 € | Rendement : 5.04 €
-    | Action-20 | prix : 114.0 € | Rendement : 20.52 €
-    temps d'execution : 0:00:03.274505
-
-"""
 
 
 

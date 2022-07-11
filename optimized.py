@@ -29,26 +29,26 @@ def optimized(budget_total, actions_tab):
                 matrix[index_action][budget] = matrix[index_action - 1][budget]
 
     budget = budget_total
-    quantity_action = len(actions_tab)
+    action_number = len(actions_tab)
     actions_selection = []
 
-    while budget >= 0 and quantity_action >= 0:
-        action_to_test = actions_tab[quantity_action - 1]
+    while budget >= 0 and action_number >= 0:
+        action_to_test = actions_tab[action_number - 1]
 
-        if matrix[quantity_action][budget] == matrix[quantity_action - 1][budget - action_to_test[1]] +\
+        if matrix[action_number][budget] == matrix[action_number - 1][budget - action_to_test[1]] +\
                 action_to_test[2]:
             actions_selection.append(action_to_test)
             budget -= action_to_test[1]
 
-        quantity_action -= 1
+        action_number -= 1
 
     return (matrix[-1][-1] / 100), actions_selection, (budget_total / 100) - (budget / 100)
 
 
 time_start = datetime.now()
 
-# name_file = "actions.csv"
-name_file = "dataset1_Python_P7.csv"
+name_file = "actions.csv"
+# name_file = "dataset1_Python_P7.csv"
 # name_file = "dataset2_Python_P7.csv"
 
 actions_tuples = get_action_tuples(name_file)
@@ -72,7 +72,6 @@ print(f"temps d'execution : {time_end - time_start}")
     suivant cette algorithme nous avons n * w calcul
     soit O(20 * 50000)
     O(1000000)
-    test en enlevant 20 positions un a une
 
     resultat :
 

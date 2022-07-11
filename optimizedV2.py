@@ -54,8 +54,8 @@ def optimized(actions_table, index_to_skip):
 
 
 # csv_file = './dataset2_Python_P7.csv'
-csv_file = './dataset1_Python_P7.csv'
-# csv_file = './actions.csv'
+# csv_file = './dataset1_Python_P7.csv'
+csv_file = './actions.csv'
 
 my_actions_table = getTableActions(csv_file)
 
