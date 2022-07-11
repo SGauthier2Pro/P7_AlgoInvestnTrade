@@ -21,25 +21,26 @@ def optimized(budget_total, actions_tab):
 
     for index_action in range(1, len(actions_tab) + 1):
         for budget in range(1, budget_total + 1):
-            if actions_tab[index_action-1][1] <= budget:
-                matrix[index_action][budget] = max(actions_tab[index_action-1][2] +
-                                                   matrix[index_action-1][budget-actions_tab[index_action-1][1]],
-                                                   matrix[index_action-1][budget])
+            if actions_tab[index_action - 1][1] <= budget:
+                matrix[index_action][budget] = max(actions_tab[index_action - 1][2] +
+                                                   matrix[index_action - 1][budget - actions_tab[index_action - 1][1]],
+                                                   matrix[index_action - 1][budget])
             else:
-                matrix[index_action][budget] = matrix[index_action-1][budget]
+                matrix[index_action][budget] = matrix[index_action - 1][budget]
 
     budget = budget_total
-    n = len(actions_tab)
+    quantity_action = len(actions_tab)
     actions_selection = []
 
-    while budget >= 0 and n >= 0:
-        action_to_test = actions_tab[n-1]
+    while budget >= 0 and quantity_action >= 0:
+        action_to_test = actions_tab[quantity_action - 1]
 
-        if matrix[n][budget] == matrix[n-1][budget-action_to_test[1]] + action_to_test[2]:
+        if matrix[quantity_action][budget] == matrix[quantity_action - 1][budget - action_to_test[1]] +\
+                action_to_test[2]:
             actions_selection.append(action_to_test)
             budget -= action_to_test[1]
 
-        n -= 1
+        quantity_action -= 1
 
     return (matrix[-1][-1] / 100), actions_selection, (budget_total / 100) - (budget / 100)
 
