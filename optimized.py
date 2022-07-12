@@ -2,92 +2,113 @@ from datetime import datetime
 import csv
 
 
-def get_action_tuples(fichier_csv):
+class Action:
+    """ une action"""
+
+    def __init__(self, name, price, percentage_gain):
+        """initialisation de l'action avec son nom, son prix et son pourcentage de benefice"""
+        self.name = name
+        self.price = float(price)
+        self.percentage_gain = float(percentage_gain)
+        self.rent = self.getBenefit()
+
+    def getBenefit(self):
+        """retourne le benefice de l'action sur 2 ans"""
+        benefits = self.price * self.percentage_gain / 100
+        return float(benefits)
+
+
+def getTableActions(fichier_csv):
     """ renvoi le tableau des objets Action créés à partir des information du fichier passé en paramètre"""
-    actions = [()]
+    actions_table = []
     with open(fichier_csv, newline='') as csvfile:
+        # reader = csv.DictReader(csvfile, delimiter=';')
         reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
-            price = int(float(row['Price']) * 100)
-            profits = int(price * float(row['Benefits']) / 100)
-            if price > 0 and float(row['Benefits']) > 0.0:
-                actions.append((row['Action'], price, profits))
-        actions.pop(0)
-        return actions
+            if row['Price'] != '0.0' and row['Benefits'] != '0.0' and float(row['Price']) > 0.0:
+                action_to_add = Action(row['Action'], row['Price'], row['Benefits'][:-1])
+                actions_table.append(action_to_add)
+        return actions_table
 
 
-def optimized(budget_total, actions_tab):
-    matrix = [[0 for x in range(budget_total + 1)] for x in range(len(actions_tab) + 1)]
+def optimized(actions_table, index_to_skip):
+    actions_table = sorted(actions_table, key=lambda action: action.percentage_gain, reverse=True)
+    actions_result_table = []
+    indices = list(range(len(actions_table)))
+    indices.remove(index_to_skip)
+    rent = 0
+    start_budget = 500
+    budget = start_budget
+    for index in indices:
+        if (budget - actions_table[index].price) >= 0:
+            actions_result_table.append(actions_table[index])
+            budget -= actions_table[index].price
+            rent += actions_table[index].getBenefit()
 
-    for index_action in range(1, len(actions_tab) + 1):
-        for budget in range(1, budget_total + 1):
-            if actions_tab[index_action - 1][1] <= budget:
-                matrix[index_action][budget] = max(actions_tab[index_action - 1][2] +
-                                                   matrix[index_action - 1][budget - actions_tab[index_action - 1][1]],
-                                                   matrix[index_action - 1][budget])
-            else:
-                matrix[index_action][budget] = matrix[index_action - 1][budget]
+        else:
+            continue
 
-    budget = budget_total
-    action_number = len(actions_tab)
-    actions_selection = []
+    result = [actions_result_table, rent, start_budget - budget]
 
-    while budget >= 0 and action_number >= 0:
-        action_to_test = actions_tab[action_number - 1]
+    return result
 
-        if matrix[action_number][budget] == matrix[action_number - 1][budget - action_to_test[1]] +\
-                action_to_test[2]:
-            actions_selection.append(action_to_test)
-            budget -= action_to_test[1]
 
-        action_number -= 1
+# csv_file = './dataset2_Python_P7.csv'
+# csv_file = './dataset1_Python_P7.csv'
+csv_file = './actions.csv'
 
-    return (matrix[-1][-1] / 100), actions_selection, (budget_total / 100) - (budget / 100)
-
+my_actions_table = getTableActions(csv_file)
 
 time_start = datetime.now()
 
-name_file = "actions.csv"
-# name_file = "dataset1_Python_P7.csv"
-# name_file = "dataset2_Python_P7.csv"
+best_result = ["", 0]
 
-actions_tuples = get_action_tuples(name_file)
-budget_base = 500
+for i in range(0, len(my_actions_table)):
+    result_tab = optimized(my_actions_table, i)
+    if result_tab:
+        if result_tab[1] > best_result[1]:
+            best_result = result_tab
 
-result = optimized(budget_base * 100, actions_tuples)
-
-print(f"Montant total investit : {result[2]} €")
-print(f"Rendement sur 2 Ans : {result[0]} €")
-for action in result[1]:
-    print(f"| {action[0]} | prix : {action[1] / 100} € | Rendement : {action[2] / 100} €")
+"""
+print report 
+"""
+print(f"Montant total investit : {best_result[2]} €")
+print(f"Rendement sur 2 Ans : {best_result[1]} €")
+for action in best_result[0]:
+    print(f"| {action.name} | prix : {action.price} € | Rendement : {action.rent} €")
 
 time_end = datetime.now()
 print(f"temps d'execution : {time_end - time_start}")
 
 """
-
+    
     Complexité temporelle :
-
-    soit n le nombre d'action et w le budget en centime d'euros
-    suivant cette algorithme nous avons n * w calcul
-    soit O(20 * 50000)
-    O(1000000)
+    
+    O(n²)
+    test en enlevant 20 positions un a une
+    soit O(40)
+    
+    Complexité spatiale :
+    
+    O(3n)
+    tableau actions, tableau indices, tableau resultat
+    soit O(60)
 
     resultat :
-
-    Montat total investit : 498.0 €
-    Rendement sur 2 Ans : 99.08 €
-    | Action-20 | prix : 114.0 € | Rendement : 20.52 €
-    | Action-19 | prix : 24.0 € | Rendement : 5.04 €
-    | Action-18 | prix : 10.0 € | Rendement : 1.4 €
-    | Action-13 | prix : 38.0 € | Rendement : 8.74 €
-    | Action-11 | prix : 42.0 € | Rendement : 7.14 €
+    
+    Montant total investit : 498.0 €
+    Rendement sur 2 Ans : 99.08000000000001 €
     | Action-10 | prix : 34.0 € | Rendement : 9.18 €
-    | Action-8 | prix : 26.0 € | Rendement : 2.86 €
     | Action-6 | prix : 80.0 € | Rendement : 20.0 €
-    | Action-5 | prix : 60.0 € | Rendement : 10.2 €
+    | Action-13 | prix : 38.0 € | Rendement : 8.74 €
+    | Action-19 | prix : 24.0 € | Rendement : 5.04 €
     | Action-4 | prix : 70.0 € | Rendement : 14.0 €
-    temps d'execution : 0:00:00.387964
+    | Action-20 | prix : 114.0 € | Rendement : 20.52 €
+    | Action-5 | prix : 60.0 € | Rendement : 10.2 €
+    | Action-11 | prix : 42.0 € | Rendement : 7.14 €
+    | Action-18 | prix : 10.0 € | Rendement : 1.4 €
+    | Action-8 | prix : 26.0 € | Rendement : 2.86 €
+    temps d'execution : 0:00:00.001995
 
 
 
