@@ -56,7 +56,7 @@ budget_base = 500
 
 result = optimized(budget_base * 100, actions_tuples)
 
-print(f"Montat total investit : {result[2]} €")
+print(f"Montant total investit : {result[2]} €")
 print(f"Rendement sur 2 Ans : {result[0]} €")
 for action in result[1]:
     print(f"| {action[0]} | prix : {action[1] / 100} € | Rendement : {action[2] / 100} €")

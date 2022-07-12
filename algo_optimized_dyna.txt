@@ -1,0 +1,100 @@
+Algorithme
+Début
+Fin
+
+=======================================================================
+
+Algorithme recupTupleAction(fichier_csv)
+Variable
+    actions[()] : TABLEAU DE TUPLES
+Début
+    Tant que ligne de fichier_csv != null:
+        ligne <- fichier_csv.ligne
+        tableau_item <- ligne.decoupage(",")
+        Pour item allant de 0 jusqu'à tableau_item.taille:
+            prix <- item[1] * 100 : ENTIER
+            profit <- item[1] * item[2] / 100 : ENTIER
+
+            Si prix > 0 && item[2] > 0.0:
+                actions = actions + (item[0], prix, profit)
+            Fin de Si
+        Fin Pour
+    Fin Tant que
+Fin
+
+=======================================================================
+
+Algorithme optimized(budget_total, tableau_actions)
+Variable
+    matrice[][] : TABLEAU ENTIER
+    numero_action <- tableau_actions.taille : ENTIER
+    actions_selectionnées[] : TABLEAU CHAINE DE CARACTERES
+Début
+    : MISE A ZERO DE LA MATRICE
+    Pour x allant de 0 jusqu'a tableau_action.taille:
+        Pour y allant de 0 jusqu'à budget_total:
+            matrice[x][y] = 0
+        Fin de Pour
+    Fin de Pour
+
+    : REMPLISSAGE DE LA MATRICE
+    Pour indice_action allant de 1 jusqu'a tableau_actions.taille + 1
+        Pour budget allant de 1 à budget_total + 1:
+
+            Si tableau_actions[indice_action - 1][1] <= budget:
+
+                matrice[indice_action][budget] = max(
+                       tableau_actions[indice_action - 1][2] + matrice[budget - tableau_actions[indice_action - 1][1],
+                       matrice[indice_action - 1][budget])
+
+            Sinon:
+
+                matrice[indice_action][budget] = matrice[indice_action - 1][budget]
+
+            Fin de Si
+
+        Fin de Pour
+    Fin de Pour
+
+    : REMISE A ZERO DES VARIABLES
+    budget = budget_total
+
+    Tant que numero_action >=0 && budget >= 0:
+
+        action_a_tester <- tableau_action[numero_action -1]
+
+        Si matrice[numero_action][budget] == matrice[numero_action - 1][budget - action_a_tester[1] + action_a_tester[2]:
+
+            actions_selectionnées <- actions_selectionnées + action_a_tester
+            budget = budget - action_a_tester[1]
+        Fin de Si
+
+        numero_action --
+
+    Fin de Tant que
+
+    retourner matrice[tableau_action.taille][budget_total] / 100, actions_selectionnées, (budget_total - budget) / 100
+
+Fin
+
+=======================================================================
+
+Algorithme main
+Variable
+   nom_de_fichier <- "./actions.csv"
+   actions_tuples <- recupTupleAction(nom_de_fichier)
+   budget_de_base <- 500
+Début
+    resultat = optimized(budget_de_base * 100, actions_tuples)
+
+    afficher("Montant total investit :" + result[2] + " €")
+    afficher("Rendement sur 2 Ans : " + result[0] + " €")
+
+    Pour action allant de 0 jusqu'à resultat[1].taille -1:
+
+        afficher("|" +  action[0] + "| prix :" + action[1] / 100 + " € | Rendement : " + action[2] / 100 + " €")
+
+    Fin de Pour
+Fin
+
+=======================================================================
