@@ -1,0 +1,111 @@
+
+Algorithme Action(nom_action, prix_action, pourcentage_benefices_action)
+Variable
+    nom <- nom_action : CHAINE DE CARACTERES
+    prix <- prix_action : ENTIER
+    pourcentage_benefices <- pourcentage_benefices_action : ENTIER
+Début
+    Fonction retourneBenefices()
+    Début Fonction
+        benefices <- prix_action * pourcentage_benefices / 100
+        retourne benefices
+    Fin Fonction
+Fin
+
+=======================================================================
+
+Algorithme chargeTableauActions(fichier_csv)
+Variable
+	tableau_actions[] : TABLEAU ACTIONS
+	ligne <- "" : CHAINE DE CARACTERES
+
+Début
+	Tant que ligne de fichier_csv != null:
+        ligne <- lecture fichier_csv
+        tableau_item <- ligne.decoupage(",")
+        Pour item allant de 0 jusqu'à tableau_item.taille:
+
+            Si item[1] > 0.0 && item[2] > 0.0:
+                action_a_ajouter = Action(item[0], item[1], item[2]
+                tableau_actions = tableau_actions + action_a_ajouter
+            Fin de Si
+
+        Fin Pour
+    Fin Tant que
+
+    retourner tableau_actions
+Fin
+
+=======================================================================
+
+Algorithme optimized(actions_tableau, indice_a_eviter, budget_de_depart)
+Variable
+    actions_tableau <- tri(actions_tableau par Action.pourcentage_gain)
+    tableau_resultat_actions[] : TABLEAU ACTION
+    tableau_indices[] : TABLEAU ENTIER
+    rendement <- 0
+    budget <- budget_de_depart
+Début
+    : REMPLISSAGE DU TABLEAU D'INDICE SANS L'INDICE A EVITER
+    indice = 0
+    Pour i allant de 0 jusqu'à actions_tableau.tailles - 2:
+
+        Si indice == indice_a_eviter
+            indice ++
+        Fin de Si
+
+        tableau_indices[i] = indice
+        indice ++
+
+    Fin de Pour
+
+    Pour index allant de 0 jusqu'a tableau_indices.taille:
+
+        Si (budget - tableau_actions[index].prix) >= 0:
+            tableau_resultat_actions <- tableau_resultat_actions + tableau_actions[index]
+            budget -= tableau_actions[index].prix
+            rendement += tableau_actions[index].retourneBenefices()
+        Sinon:
+            continue
+        Fin de Si
+
+    Fin de Pour
+
+    Retourner [tableau_resultat_actions, rendement, budget_de_depart - budget]
+
+Fin
+
+=======================================================================
+
+Algorithme Main
+Variable
+     fichier_csv <- "chemin de fichier csv.csv"
+     meilleur_resultat <- ["", 0, 0]
+     tableau_resultat[] : TABLEAU
+     budget_d_origine <- 500
+Début
+    mon_tableau_actions <- chargeTableauActions(fichier_csv)
+
+    Pour i allant de 0 jusqu'à mon_tableau_actions.taille -1:
+
+        tableau_resultat = optimized(mon_tableau_actions, i, budget_d_origine)
+        Si tableau_resultat[1] > meilleur_resultat[1]:
+            meilleur_resultat <- tableau_resultat
+        Fin de Si
+
+    Fin de Pour
+
+    afficher("Montant total investit :" + meilleur_resultat[2] + " €")
+    afficher("Rendement sur 2 Ans : " + meilleur_resultat[1] + " €")
+
+    Pour indice allant de 0 jusqu'à meilleur_resultat[0].taille -1:
+
+        afficher("|" +  meilleur_resultat[0][indice].nom + "| prix :" + meilleur_resultat[0][indice].prix +
+                 " € | Rendement : " + meilleur_resultat[0][indice].retourneBenefices() + " €")
+
+    Fin de Pour
+
+
+Fin
+
+=======================================================================

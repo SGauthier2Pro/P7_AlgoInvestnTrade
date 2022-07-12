@@ -47,8 +47,8 @@ def optimized(budget_total, actions_tab):
 
 time_start = datetime.now()
 
-name_file = "actions.csv"
-# name_file = "dataset1_Python_P7.csv"
+# name_file = "actions.csv"
+name_file = "dataset1_Python_P7.csv"
 # name_file = "dataset2_Python_P7.csv"
 
 actions_tuples = get_action_tuples(name_file)

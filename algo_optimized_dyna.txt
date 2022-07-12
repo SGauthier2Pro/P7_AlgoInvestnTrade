@@ -1,15 +1,10 @@
-Algorithme
-Début
-Fin
-
-=======================================================================
 
 Algorithme recupTupleAction(fichier_csv)
 Variable
     actions[()] : TABLEAU DE TUPLES
 Début
     Tant que ligne de fichier_csv != null:
-        ligne <- fichier_csv.ligne
+        ligne <- lecture fichier_csv
         tableau_item <- ligne.decoupage(",")
         Pour item allant de 0 jusqu'à tableau_item.taille:
             prix <- item[1] * 100 : ENTIER
