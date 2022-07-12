@@ -51,8 +51,9 @@ Début
         Fin de Pour
     Fin de Pour
 
-    : REMISE A ZERO DES VARIABLES
-    budget = budget_total
+    : PARCOURS INVERSE DE LA MATRICE POUR RECUPERATION DES ACTIONS UTILISEES
+    budget <- budget_total
+    numero_action <- tableau_action.taille
 
     Tant que numero_action >=0 && budget >= 0:
 
