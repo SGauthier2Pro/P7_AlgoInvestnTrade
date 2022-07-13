@@ -103,6 +103,7 @@ Début
         budget <- budget_depart
         rendement <- 0
 
+    Fin de Tant que
     retourner liste_action_a_retourner
 
 Fin
