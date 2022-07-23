@@ -51,8 +51,8 @@ def optimized(actions_table, index_to_skip, start_budget):
     return result
 
 
-# csv_file = './dataset2_Python_P7.csv'
-csv_file = './dataset1_Python_P7.csv'
+csv_file = './dataset2_Python_P7.csv'
+# csv_file = './dataset1_Python_P7.csv'
 # csv_file = './actions.csv'
 
 my_actions_table = getTableActions(csv_file)
@@ -78,37 +78,3 @@ for action in best_result[0]:
 
 time_end = datetime.now()
 print(f"temps d'execution : {time_end - time_start}")
-
-"""
-    
-    Complexité temporelle :
-    
-    O(n²)
-    test en enlevant 20 positions un a une
-    soit O(40)
-    
-    Complexité spatiale :
-    
-    O(3n)
-    tableau actions, tableau indices, tableau resultat
-    soit O(60)
-
-    resultat :
-    
-    Montant total investit : 498.0 €
-    Rendement sur 2 Ans : 99.08000000000001 €
-    | Action-10 | prix : 34.0 € | Rendement : 9.18 €
-    | Action-6 | prix : 80.0 € | Rendement : 20.0 €
-    | Action-13 | prix : 38.0 € | Rendement : 8.74 €
-    | Action-19 | prix : 24.0 € | Rendement : 5.04 €
-    | Action-4 | prix : 70.0 € | Rendement : 14.0 €
-    | Action-20 | prix : 114.0 € | Rendement : 20.52 €
-    | Action-5 | prix : 60.0 € | Rendement : 10.2 €
-    | Action-11 | prix : 42.0 € | Rendement : 7.14 €
-    | Action-18 | prix : 10.0 € | Rendement : 1.4 €
-    | Action-8 | prix : 26.0 € | Rendement : 2.86 €
-    temps d'execution : 0:00:00.001995
-
-
-
-"""
